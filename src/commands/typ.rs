@@ -2,8 +2,6 @@ use crate::cmd::Commands;
 use crate::error::AppError;
 use crate::utils;
 
-use std::env;
-
 pub fn parse<'a>(parts: &Vec<&'a str>) -> Result<Commands<'a>, AppError<'a>> {
     if parts.len() < 2 {
         return Err(AppError::ArgsError(
@@ -25,9 +23,7 @@ pub fn execute<'a>(cmd: &'a str) {
     }
 
     // Executable files in PATH
-    let path = env::var("PATH").unwrap_or_else(|_| "".to_string());
-    let dirs = path.split(":").collect::<Vec<&str>>();
-    if let Some(path) = utils::file_exists(cmd, dirs) {
+    if let Some(path) = utils::get_executable(cmd) {
         println!("{} is {}", cmd, path);
         return;
     }
