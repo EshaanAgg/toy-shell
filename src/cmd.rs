@@ -31,11 +31,16 @@ pub fn execute(input: &str) {
             Commands::Type(str) => commands::typ::execute(str),
             Commands::Unknown(cmd) => {
                 // If it is an executable, run the same
-                if let Some(path) = utils::get_executable(cmd[0]) {
-                    Command::new(path)
+                if let Some(path) = utils::get_file(cmd[0]) {
+                    let mut child = Command::new(path)
                         .args(&cmd[1..])
+                        .stdout(std::io::stdout())
                         .spawn()
                         .expect("Failed to execute the binary");
+
+                    child
+                        .wait()
+                        .expect("The child process ran into an error during execution");
                 } else {
                     // Print unknown command message
                     println!("{}: command not found", cmd[0]);
