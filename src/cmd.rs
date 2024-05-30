@@ -20,7 +20,7 @@ pub fn execute(input: &str) {
     match Commands::from_str(input) {
         Ok(cmd) => match cmd {
             Commands::Exit(code) => std::process::exit(code),
-            Commands::Unknown(cmd) => println!("{}: command not found: ", cmd),
+            Commands::Unknown(cmd) => println!("{}: command not found", cmd),
         },
         Err(e) => e.show(),
     }
