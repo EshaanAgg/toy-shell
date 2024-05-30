@@ -1,13 +1,10 @@
-pub struct Error {
-    message: String,
-}
+use thiserror::Error;
 
-impl Error {
-    pub fn new(s: String) -> Self {
-        Error { message: s }
-    }
+#[derive(Error, Debug)]
+pub enum AppError<'a> {
+    #[error("Error: {0}")]
+    GeneralError(&'a str),
 
-    pub fn show(&self) {
-        println!("Error: {}", self.message);
-    }
+    #[error("Invalid Argument '{0}': {1}")]
+    ArgsError(&'a str, &'a str),
 }
