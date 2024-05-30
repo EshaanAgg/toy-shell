@@ -34,7 +34,7 @@ pub fn execute(input: &str) {
             Commands::Type(str) => commands::typ::execute(str),
             Commands::Unknown(cmd) => {
                 // Check if it is an executable on the system
-                if let Some(path) = utils::get_executable(cmd[0]) {
+                if let Some(path) = utils::get_file(cmd[0]) {
                     let mut child = Command::new(path)
                         .args(&cmd[1..])
                         .stdout(std::io::stdout())

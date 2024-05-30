@@ -14,14 +14,19 @@ pub fn file_exists<'a>(file: &'a str, dirs: Vec<&'a str>) -> Option<String> {
     None
 }
 
-/// Checks if a file exists locally or as an executable in the PATH.
-/// Returns the complete path to the file.
+/// Checks if there is a executable 'file' present in the PATH
 pub fn get_executable<'a>(file: &'a str) -> Option<String> {
-    // if Path::new(&file).exists() {
-    //     return Some(file.to_string());
-    // }
-
     let path = env::var("PATH").unwrap_or_else(|_| "".to_string());
     let dirs = path.split(":").collect::<Vec<&str>>();
     file_exists(file, dirs)
+}
+
+/// Checks if a file exists locally or an executable in the PATH
+/// Returns the complete path to the file
+pub fn get_file<'a>(file: &'a str) -> Option<String> {
+    if Path::new(&file).exists() {
+        return Some(file.to_string());
+    }
+
+    get_executable(file)
 }
