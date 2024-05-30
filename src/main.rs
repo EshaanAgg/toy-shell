@@ -1,4 +1,6 @@
 mod cmd;
+mod commands;
+mod error;
 
 use std::io::{self, Write};
 
