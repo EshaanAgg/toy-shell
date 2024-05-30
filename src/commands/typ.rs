@@ -16,7 +16,7 @@ pub fn execute<'a>(cmd: &'a str) {
     let builtins = vec!["echo", "exit", "type"];
 
     if let Some(_) = builtins.into_iter().find(|&x| x == cmd) {
-        println!("{} is shell builtin", cmd);
+        println!("{} is a shell builtin", cmd);
         return;
     }
 
