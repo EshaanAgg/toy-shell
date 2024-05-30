@@ -4,8 +4,10 @@ enum Commands<'a> {
 
 impl<'a> Commands<'a> {
     fn from_str(s: &'a str) -> Self {
-        match s {
-            _ => Commands::Unknown(s),
+        let trimmed_cmd = s.trim();
+
+        match trimmed_cmd {
+            _ => Commands::Unknown(trimmed_cmd),
         }
     }
 }
