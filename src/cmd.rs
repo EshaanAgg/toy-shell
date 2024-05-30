@@ -4,6 +4,7 @@ pub enum Commands<'a> {
     Exit(i32),
     Unknown(&'a str),
     Echo(&'a str),
+    Type(&'a str),
 }
 
 impl<'a> Commands<'a> {
@@ -13,6 +14,7 @@ impl<'a> Commands<'a> {
         match cmd_parts[0] {
             "echo" => Ok(Commands::Echo(&s[5..].trim())),
             "exit" => commands::exit::parse(&cmd_parts),
+            "type" => commands::typ::parse(&cmd_parts),
             _ => Ok(Commands::Unknown(s.trim())),
         }
     }
@@ -21,9 +23,10 @@ impl<'a> Commands<'a> {
 pub fn execute(input: &str) {
     match Commands::from_str(input) {
         Ok(cmd) => match cmd {
-            Commands::Exit(code) => std::process::exit(code),
-            Commands::Unknown(cmd) => println!("{}: command not found", cmd),
             Commands::Echo(str) => println!("{}", str),
+            Commands::Exit(code) => std::process::exit(code),
+            Commands::Type(str) => commands::typ::execute(str),
+            Commands::Unknown(cmd) => println!("{}: command not found", cmd),
         },
         Err(e) => println!("{}", e.to_string()),
     }
