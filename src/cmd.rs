@@ -7,6 +7,7 @@ pub enum Commands<'a> {
     Exit(i32),
     Echo(&'a str),
     Type(&'a str),
+    Pwd,
     Unknown(Vec<&'a str>),
 }
 
@@ -15,9 +16,10 @@ impl<'a> Commands<'a> {
         let cmd_parts = s.trim().split(" ").collect::<Vec<&str>>();
 
         match cmd_parts[0] {
-            "echo" => Ok(Commands::Echo(&s[5..].trim())),
-            "exit" => commands::exit::parse(&cmd_parts),
+            "pwd" => commands::pwd::parse(&cmd_parts),
             "type" => commands::typ::parse(&cmd_parts),
+            "exit" => commands::exit::parse(&cmd_parts),
+            "echo" => Ok(Commands::Echo(&s[5..].trim())),
             _ => Ok(Commands::Unknown(cmd_parts)),
         }
     }
@@ -26,12 +28,13 @@ impl<'a> Commands<'a> {
 pub fn execute(input: &str) {
     match Commands::from_str(input) {
         Ok(cmd) => match cmd {
+            Commands::Pwd => commands::pwd::execute(),
             Commands::Echo(str) => println!("{}", str),
             Commands::Exit(code) => std::process::exit(code),
             Commands::Type(str) => commands::typ::execute(str),
             Commands::Unknown(cmd) => {
-                // If it is an executable, run the same
-                if let Some(path) = utils::get_file(cmd[0]) {
+                // Check if it is an executable on the system
+                if let Some(path) = utils::get_executable(cmd[0]) {
                     let mut child = Command::new(path)
                         .args(&cmd[1..])
                         .stdout(std::io::stdout())
