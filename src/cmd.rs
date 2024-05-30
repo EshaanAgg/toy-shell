@@ -30,12 +30,14 @@ pub fn execute(input: &str) {
             Commands::Exit(code) => std::process::exit(code),
             Commands::Type(str) => commands::typ::execute(str),
             Commands::Unknown(cmd) => {
+                // If it is an executable, run the same
                 if let Some(path) = utils::get_executable(cmd[0]) {
                     Command::new(path)
                         .args(&cmd[1..])
                         .spawn()
                         .expect("Failed to execute the binary");
                 } else {
+                    // Print unknown command message
                     println!("{}: command not found", cmd[0]);
                 }
             }
